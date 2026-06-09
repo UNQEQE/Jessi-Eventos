@@ -54,8 +54,15 @@ export default function Navbar({ page, setPage, cartCount, session, onLogout }) 
           </span>
         </button>
 
-        {/* Sesión */}
-        {session && (
+        {!session ? (
+          <button
+            className="btn-green"
+            onClick={() => setPage('login')}
+            style={{ marginLeft: 12 }}
+          >
+            Iniciar sesión
+          </button>
+        ) : (
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginLeft: 8 }}>
             <span style={{ fontSize: 13, opacity: .8 }}>
               Hola, {session.nombre && session.apellido ? `${session.nombre} ${session.apellido}` : ''}

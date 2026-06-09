@@ -42,12 +42,11 @@ export default function App() {
     saveCart(updated);
   };
 
-  // ---- Ruta de auth ----
-  if (!session) {
-    return <Auth onLogin={handleLogin} />;
-  }
-
   const renderPage = () => {
+    if (!session && page === 'login') {
+      return <Auth onLogin={handleLogin} />;
+    }
+
     switch (page) {
       case 'inicio':         return <Inicio setPage={setPage} session={session} cartCount={cart.length} />;
       case 'nosotros':       return <Nosotros />;
@@ -58,6 +57,7 @@ export default function App() {
       case 'contacto':       return <Contacto />;
       case 'requerimientos': return <Requerimientos />;
       case 'terminos':       return <Terminos />;
+      case 'login':          return <Auth onLogin={handleLogin} />;
       default:               return <Inicio setPage={setPage} session={session} cartCount={cart.length} />;
     }
   };
