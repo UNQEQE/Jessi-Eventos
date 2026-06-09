@@ -10,13 +10,66 @@ export default function Personas() {
   const [editIdx, setEditIdx]     = useState(null);
   const [msg, setMsg]             = useState(null);
   const [edad, setEdad]           = useState(null);
+  const [errors, setErrors]       = useState({});
 
   const set = (k, v) => setForm(p => ({ ...p, [k]: v }));
 
-  const handleRut = (v) => set('rut', formatRutInput(v));
+  const validateField = (k, v) => {
+    let error = '';
+
+    if (k === 'rut') {
+      if (!v.trim()) error = 'RUT obligatorio';
+      else if (!validateRut(v)) error = 'RUT inválido';
+    }
+
+    if (k === 'nombre') {
+      if (!v.trim()) error = 'Nombre requerido';
+      else if (/\d/.test(v)) error = 'El nombre no puede contener números';
+    }
+
+    if (k === 'correo') {
+      if (!v.trim()) error = 'Correo requerido';
+      else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) error = 'Correo inválido';
+    }
+
+    if (k === 'telefono' && v.trim()) {
+      if (!/^[0-9+()\s-]{7,20}$/.test(v)) error = 'Teléfono inválido';
+    }
+
+    if (k === 'fecha' && v) {
+      if (Number.isNaN(new Date(v).getTime())) error = 'Fecha inválida';
+    }
+
+    setErrors(prev => ({ ...prev, [k]: error }));
+    return error;
+  };
+
+  const validateForm = () => {
+    const fields = ['rut', 'nombre', 'correo', 'telefono', 'fecha'];
+    const newErrors = {};
+
+    fields.forEach((key) => {
+      const value = form[key] || '';
+      const error = validateField(key, value);
+      if (error) newErrors[key] = error;
+    });
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleFieldChange = (k, v) => {
+    set(k, v);
+    validateField(k, v);
+  };
+
+  const handleRut = (v) => {
+    const formatted = formatRutInput(v);
+    handleFieldChange('rut', formatted);
+  };
 
   const handleFecha = (v) => {
-    set('fecha', v);
+    handleFieldChange('fecha', v);
     setEdad(calcEdad(v));
   };
 
@@ -27,10 +80,10 @@ export default function Personas() {
 
   const guardar = () => {
     setMsg(null);
-    if (!validateRut(form.rut))       { setMsg({ type: 'error', text: '❌ RUT inválido' }); return; }
-    if (!form.nombre.trim())          { setMsg({ type: 'error', text: '❌ Nombre requerido' }); return; }
-    if (/\d/.test(form.nombre))       { setMsg({ type: 'error', text: '❌ El nombre no puede contener números' }); return; }
-    if (!form.correo.trim())          { setMsg({ type: 'error', text: '❌ Correo requerido' }); return; }
+    if (!validateForm()) {
+      setMsg({ type: 'error', text: 'Por favor corrige los campos requeridos antes de continuar.' });
+      return;
+    }
 
     const edadStr = edad !== null ? `${edad} años` : '';
     const persona = { ...form, rut: formatRut(form.rut), edad: edadStr };
@@ -90,31 +143,51 @@ export default function Personas() {
             <div className="form-group">
               <label>RUT *</label>
               <input value={form.rut} onChange={e => handleRut(e.target.value)} placeholder="12.345.678-9" />
-              {rs !== null && (
-                <span style={{ fontSize: 12, marginTop: 4, display: 'block', color: rs ? '#afffaa' : '#ffaaaa' }}>
-                  {rs ? '✅ RUT válido' : '❌ RUT inválido'}
+              {(errors.rut || rs !== null) && (
+                <span style={{ fontSize: 12, marginTop: 4, display: 'block', color: errors.rut ? '#ffaaaa' : rs ? '#afffaa' : '#ffaaaa' }}>
+                  {errors.rut || (rs ? '✅ RUT válido' : '❌ RUT inválido')}
                 </span>
               )}
             </div>
 
             <div className="form-group">
               <label>Nombre *</label>
-              <input value={form.nombre} onChange={e => set('nombre', e.target.value)} placeholder="Nombre completo" />
+              <input value={form.nombre} onChange={e => handleFieldChange('nombre', e.target.value)} placeholder="Nombre completo" />
+              {errors.nombre && (
+                <span style={{ fontSize: 12, marginTop: 4, display: 'block', color: '#ffaaaa' }}>
+                  {errors.nombre}
+                </span>
+              )}
             </div>
 
             <div className="form-group">
               <label>Correo *</label>
-              <input type="email" value={form.correo} onChange={e => set('correo', e.target.value)} placeholder="correo@ejemplo.com" />
+              <input type="email" value={form.correo} onChange={e => handleFieldChange('correo', e.target.value)} placeholder="correo@ejemplo.com" />
+              {errors.correo && (
+                <span style={{ fontSize: 12, marginTop: 4, display: 'block', color: '#ffaaaa' }}>
+                  {errors.correo}
+                </span>
+              )}
             </div>
 
             <div className="form-group">
               <label>Teléfono</label>
-              <input value={form.telefono} onChange={e => set('telefono', e.target.value)} placeholder="+56 9 1234 5678" />
+              <input value={form.telefono} onChange={e => handleFieldChange('telefono', e.target.value)} placeholder="+56 9 1234 5678" />
+              {errors.telefono && (
+                <span style={{ fontSize: 12, marginTop: 4, display: 'block', color: '#ffaaaa' }}>
+                  {errors.telefono}
+                </span>
+              )}
             </div>
 
             <div className="form-group">
               <label>Fecha de Nacimiento</label>
               <input type="date" value={form.fecha} onChange={e => handleFecha(e.target.value)} />
+              {errors.fecha && (
+                <span style={{ fontSize: 12, marginTop: 4, display: 'block', color: '#ffaaaa' }}>
+                  {errors.fecha}
+                </span>
+              )}
             </div>
 
             {edad !== null && (
