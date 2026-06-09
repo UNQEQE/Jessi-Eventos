@@ -1,5 +1,5 @@
 import diagrama1 from '../assets/diagrama1.png';
-import diagrama2 from '../assets/diagrama2.png';
+import diagrama2 from '../assets/Diagrama Actualizado.png';
 
 const sections = [
   {
