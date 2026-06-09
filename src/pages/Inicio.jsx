@@ -55,12 +55,7 @@ export default function Inicio({ setPage, session, cartCount }) {
             <p style={{ opacity: .7, fontSize: 14, marginBottom: 24 }}>
               Bienvenido/a, <strong style={{ color: '#b06aff' }}>
                 {session.nombre && session.apellido ? `${session.nombre} ${session.apellido}` : 'Usuario'}
-              </strong> · {session.edad} años
-              {session.rut && (
-                <span style={{ display: 'block', opacity: .8, marginTop: 6 }}>
-                  RUT: {hashRut(session.rut)}
-                </span>
-              )}
+              </strong>
             </p>
           )}
           <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
