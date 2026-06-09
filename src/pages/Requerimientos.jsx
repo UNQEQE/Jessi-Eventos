@@ -5,12 +5,12 @@ const sections = [
   {
     title: 'Diagrama de Casos de Uso — Interacción del Cliente',
     img:   diagrama1,
-    desc:  'Representa las interacciones del actor Cliente con el sistema Jessi Eventos: visualización de productos, carrito de compras, finalización de pedido y contacto con la empresa.',
+    desc:  'Este diagrama se centra en la perspectiva del usuario final (el "Cliente") y lo que puede lograr al interactuar con la plataforma. Propósito: Muestra los límites del sistema "Jessi Eventos" y las funcionalidades a las que tiene acceso el actor principal. Acciones del Cliente: Autenticación con Registrarse/Iniciar sesión como punto de entrada. Proceso de Compra que engloba Ver producto, Agregar al Carrito y Realizar Compra, siguiendo el flujo lógico de un e-commerce. Funcionalidades de Soporte: Calcular UF/UTM/EURO (que coincide con la clase IndicadorAPI) y Contactar Empresa. Cumplimiento: El caso de uso Aceptar términos asegura un flujo legal/administrativo previo a las operaciones críticas.',
   },
   {
     title: 'Diagrama de Clases — Estructura de Datos y Lógica de Negocio',
     img:   diagrama2,
-    desc:  'Define las clases principales: Cliente, Producto, Carrito y Venta. Incluye atributos (string, int) y métodos como calcularTotal() y generarVenta().',
+    desc:  'Este diagrama define la arquitectura interna del sistema, mostrando cómo se organizan los datos y cómo interactúan las diferentes entidades. Propósito: Define los objetos que compondrán la base de datos y la lógica del negocio. Componentes Clave: Jerarquía de Usuario/Persona con una relación de composición donde una Persona (rut, nombre, edad) tiene asociado un Usuario (password y key). Gestión de Ventas a través de Carrito y Venta, utilizando DetalleCarrito para gestionar la relación entre productos y cantidad. Integración Externa: IndicadorAPI consume servicios externos para obtener tasas de cambio (UF, UTM, Euro) y realizar conversiones de moneda. Encapsulamiento: Cada clase tiene sus propios atributos y métodos, como calcularTotal() en el carrito o generarVenta() en la venta.',
   },
 ];
 
