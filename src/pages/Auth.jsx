@@ -17,6 +17,7 @@ export default function Auth({ onLogin }) {
   const [rPass2, setRPass2]   = useState('');
   const [rMsg, setRMsg]       = useState(null);
   const [edad, setEdad]       = useState(null);
+  const today                 = new Date().toISOString().slice(0, 10);
 
   // ---- LOGIN ----
   const doLogin = () => {
@@ -47,7 +48,11 @@ export default function Auth({ onLogin }) {
     if (!rApellido.trim())               { setRMsg({ type: 'error', text: '❌ Ingresa tu apellido' }); return; }
     if (/\d/.test(rApellido))           { setRMsg({ type: 'error', text: '❌ El apellido no puede contener números' }); return; }
     if (!rFecha)                         { setRMsg({ type: 'error', text: '❌ Ingresa tu fecha de nacimiento' }); return; }
-    if (edad < 0 || edad > 120)         { setRMsg({ type: 'error', text: '❌ Fecha inválida' }); return; }
+    const fechaNacimiento = new Date(rFecha);
+    const fechaHoy = new Date();
+    if (Number.isNaN(fechaNacimiento.getTime())) { setRMsg({ type: 'error', text: '❌ Fecha inválida' }); return; }
+    if (fechaNacimiento > fechaHoy)      { setRMsg({ type: 'error', text: '❌ La fecha no puede ser futura' }); return; }
+    if (edad < 0 || edad > 120)         { setRMsg({ type: 'error', text: '❌ No puede superar los 120 años' }); return; }
     if (rPass.length < 6)               { setRMsg({ type: 'error', text: '❌ Contraseña mínimo 6 caracteres' }); return; }
     if (rPass !== rPass2)               { setRMsg({ type: 'error', text: '❌ Las contraseñas no coinciden' }); return; }
 
@@ -148,7 +153,7 @@ export default function Auth({ onLogin }) {
             </div>
             <div className="form-group">
               <label>Fecha de Nacimiento</label>
-              <input type="date" value={rFecha} onChange={e => handleFecha(e.target.value)} />
+              <input type="date" max={today} value={rFecha} onChange={e => handleFecha(e.target.value)} />
             </div>
             {edad !== null && (
               <div style={{ background: 'rgba(176,106,255,0.2)', border: '1px solid #b06aff', borderRadius: 8, padding: '10px 14px', marginBottom: 14, fontSize: 14 }}>
