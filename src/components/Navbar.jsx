@@ -3,10 +3,10 @@ export default function Navbar({ page, setPage, cartCount, session, onLogout }) 
     { id: 'inicio',         label: 'Inicio' },
     { id: 'personas',       label: 'Personas' },
     { id: 'productos',      label: 'Productos' },
-    { id: 'venta',          label: 'Venta' },
     { id: 'contacto',       label: 'Contacto' },
     { id: 'terminos',       label: 'Términos' },
     { id: 'requerimientos', label: 'Requerimientos' },
+    { id: 'venta',          label: '🛒' },
   ];
 
   return (
@@ -42,7 +42,7 @@ export default function Navbar({ page, setPage, cartCount, session, onLogout }) 
         ))}
 
         {/* Carrito */}
-        <button className="btn-outline" onClick={() => setPage('carrito')} style={{ position: 'relative', padding: '8px 14px' }}>
+        <button className="btn-outline" onClick={() => setPage('carrito')} style={{ position: 'relative', padding: '8px 14px', display: 'none' }}>
           🛒
           <span className="badge-danger" style={{
             position: 'absolute', top: -6, right: -6,
