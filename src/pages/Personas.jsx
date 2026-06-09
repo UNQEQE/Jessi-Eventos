@@ -37,7 +37,19 @@ export default function Personas() {
     }
 
     if (k === 'fecha' && v) {
-      if (Number.isNaN(new Date(v).getTime())) error = 'Fecha inválida';
+      const fecha = new Date(v);
+      if (Number.isNaN(fecha.getTime())) {
+        error = 'Fecha inválida';
+      } else {
+        const hoy = new Date();
+        const hoySinHora = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate());
+        if (fecha > hoySinHora) {
+          error = 'La fecha no puede ser futura';
+        } else {
+          const edadCalculada = calcEdad(v);
+          if (edadCalculada > 120) error = 'No puede superar los 120 años';
+        }
+      }
     }
 
     setErrors(prev => ({ ...prev, [k]: error }));
@@ -77,6 +89,8 @@ export default function Personas() {
     if (form.rut.length < 6) return null;
     return validateRut(form.rut);
   };
+
+  const today = new Date().toISOString().slice(0, 10);
 
   const guardar = () => {
     setMsg(null);
@@ -182,7 +196,7 @@ export default function Personas() {
 
             <div className="form-group">
               <label>Fecha de Nacimiento</label>
-              <input type="date" value={form.fecha} onChange={e => handleFecha(e.target.value)} />
+              <input type="date" max={today} value={form.fecha} onChange={e => handleFecha(e.target.value)} />
               {errors.fecha && (
                 <span style={{ fontSize: 12, marginTop: 4, display: 'block', color: '#ffaaaa' }}>
                   {errors.fecha}
